@@ -1,0 +1,82 @@
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import ProductCard from './ProductCard';
+import { fetchProducts } from '../services/api';
+
+const ProductShowcase = () => {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadProducts = async () => {
+            try {
+                const data = await fetchProducts();
+                setProducts(data);
+            } catch (error) {
+                console.error("Failed to load products", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadProducts();
+    }, []);
+
+    const container = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const item = {
+        hidden: { opacity: 0, y: 50 },
+        show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+    };
+
+    if (loading) {
+        return (
+            <div className="py-32 text-center text-[#F5E6D3] flex flex-col items-center justify-center">
+                <div className="w-12 h-12 border-4 border-[#D4A574] border-t-transparent rounded-full animate-spin mb-4" />
+                <p className="text-xl font-serif">Curating Selection...</p>
+            </div>
+        );
+    }
+
+    return (
+        <section id="products" className="py-32 px-4 md:px-8 relative max-w-7xl mx-auto">
+            <motion.h2
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-6xl md:text-7xl font-serif font-bold text-center text-[#F5E6D3] mb-4"
+            >
+                Our Signature Blends
+            </motion.h2>
+            <motion.div
+                initial={{ opacity: 0, width: 0 }}
+                whileInView={{ opacity: 1, width: 100 }}
+                viewport={{ once: true }}
+                className="h-1 bg-[#D4A574] mx-auto mb-16 rounded-full"
+            />
+
+            <motion.div
+                variants={container}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 px-2 md:px-0"
+            >
+                {products.map((product, index) => (
+                    <motion.div key={product.id || index} variants={item}>
+                        <ProductCard product={product} index={index} />
+                    </motion.div>
+                ))}
+            </motion.div>
+        </section>
+    );
+};
+
+export default ProductShowcase;
