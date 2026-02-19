@@ -11,9 +11,18 @@ const ProductShowcase = () => {
         const loadProducts = async () => {
             try {
                 const data = await fetchProducts();
-                setProducts(data);
+                // Safety check: specific handling if data is wrapped or invalid
+                if (Array.isArray(data)) {
+                    setProducts(data);
+                } else if (data && Array.isArray(data.products)) {
+                    setProducts(data.products);
+                } else {
+                    console.error("API returned invalid product data format:", data);
+                    setProducts([]);
+                }
             } catch (error) {
                 console.error("Failed to load products", error);
+                setProducts([]);
             } finally {
                 setLoading(false);
             }
@@ -69,7 +78,7 @@ const ProductShowcase = () => {
                 viewport={{ once: true }}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 px-2 md:px-0"
             >
-                {products.map((product, index) => (
+                {Array.isArray(products) && products.map((product, index) => (
                     <motion.div key={product.id || index} variants={item}>
                         <ProductCard product={product} index={index} />
                     </motion.div>
