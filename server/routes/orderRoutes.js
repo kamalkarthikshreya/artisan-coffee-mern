@@ -44,16 +44,16 @@ router.post('/', async (req, res) => {
                 stripeSessionId: `mock_${mockOrderId}_${Date.now()}`
             });
 
-            // Send Simulated Email
+            // Send Simulated Email (Fire & Forget)
             const emailHtml = generateOrderEmail(newOrder);
-            await sendEmail({
+            sendEmail({
                 to: customer.email,
                 subject: `Order Confirmation: ${mockOrderId}`,
                 html: emailHtml
             });
 
-            // Send Merchant Notification
-            await sendEmail({
+            // Send Merchant Notification (Fire & Forget)
+            sendEmail({
                 to: process.env.CONTACT_EMAIL || 'admin@example.com',
                 subject: `🔔 New Order: ${mockOrderId}`,
                 html: `<p>New order received from ${customer.name} ($${totalAmount}).</p>`
@@ -126,9 +126,9 @@ router.post('/verify', async (req, res) => {
                 order.orderId = 'ORD-' + sessionId.slice(-8).toUpperCase(); // Finalize ID
                 await order.save();
 
-                // Send Real Emails
+                // Send Real Emails (Fire & Forget)
                 const emailHtml = generateOrderEmail(order);
-                await sendEmail({
+                sendEmail({
                     to: order.customer.email,
                     subject: `Order Confirmation: ${order.orderId}`,
                     html: emailHtml
