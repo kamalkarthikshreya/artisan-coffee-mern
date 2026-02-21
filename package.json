@@ -2,7 +2,7 @@
     "name": "artisan-coffee-mern-root",
     "version": "1.0.0",
     "scripts": {
-        "start": "concurrently \"npm run server\" \"npm run client\"",
+        "start": "node server/server.js",
         "server": "cd server && npm start",
         "client": "cd client && npm run dev",
         "install-all": "cd server && npm install && cd ../client && npm install"
