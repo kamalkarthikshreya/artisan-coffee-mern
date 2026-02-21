@@ -44,6 +44,19 @@ router.get('/', async (req, res) => {
     }
 });
 
+// @desc    Seed products
+// @route   GET /api/products/seed
+// @access  Public
+router.get('/seed', async (req, res) => {
+    try {
+        await Product.deleteMany({});
+        const createdProducts = await Product.insertMany(seedData);
+        res.json({ message: 'Products Seeded Successfully', count: createdProducts.length });
+    } catch (error) {
+        res.status(500).json({ message: 'Seeding Failed', error: error.message });
+    }
+});
+
 // @desc    Fetch single product
 // @route   GET /api/products/:id
 // @access  Public
@@ -57,19 +70,6 @@ router.get('/:id', async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });
-    }
-});
-
-// @desc    Seed products
-// @route   GET /api/products/seed
-// @access  Public
-router.get('/seed', async (req, res) => {
-    try {
-        await Product.deleteMany({});
-        const createdProducts = await Product.insertMany(seedData);
-        res.json({ message: 'Products Seeded Successfully', count: createdProducts.length });
-    } catch (error) {
-        res.status(500).json({ message: 'Seeding Failed', error: error.message });
     }
 });
 
