@@ -31,7 +31,8 @@ const sendEmail = async (options) => {
         await transporter.sendMail(mailOptions);
         console.log(`📧 Email sent to ${options.to}`);
     } catch (err) {
-        console.error('❌ Email send failed:', err);
+        console.error('❌ Email send failed (NON-BLOCKING):', err.message);
+        // Do NOT re-throw the error, so the checkout flow continues!
     }
 };
 
