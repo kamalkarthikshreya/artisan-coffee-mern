@@ -32,6 +32,23 @@ const seedData = [
     }
 ];
 
+// @desc    Ping Test
+// @route   GET /api/products/ping
+router.get('/ping', (req, res) => res.json({ message: 'Product API is alive v2' }));
+
+// @desc    Seed products
+// @route   GET /api/products/seed
+// @access  Public
+router.get('/seed', async (req, res) => {
+    try {
+        await Product.deleteMany({});
+        const createdProducts = await Product.insertMany(seedData);
+        res.json({ message: 'DATABASE_SEEDED_SUCCESS_V2', count: createdProducts.length });
+    } catch (error) {
+        res.status(500).json({ message: 'Seeding Failed', error: error.message });
+    }
+});
+
 // @desc    Fetch all products
 // @route   GET /api/products
 // @access  Public
@@ -41,19 +58,6 @@ router.get('/', async (req, res) => {
         res.json(products);
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });
-    }
-});
-
-// @desc    Seed products
-// @route   GET /api/products/seed
-// @access  Public
-router.get('/seed', async (req, res) => {
-    try {
-        await Product.deleteMany({});
-        const createdProducts = await Product.insertMany(seedData);
-        res.json({ message: 'Products Seeded Successfully', count: createdProducts.length });
-    } catch (error) {
-        res.status(500).json({ message: 'Seeding Failed', error: error.message });
     }
 });
 
