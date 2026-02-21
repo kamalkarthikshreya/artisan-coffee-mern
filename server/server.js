@@ -29,10 +29,14 @@ app.use('/api/users', userRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {
-    res.send('Artisan Coffee Backend is Running');
+    res.send('Artisan Coffee Backend is Running v1.0.2');
+});
+
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', version: '1.0.2', time: new Date() });
 });
 
 // Start Server
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`🚀 Server running on port ${PORT} [v1.0.2]`);
 });
