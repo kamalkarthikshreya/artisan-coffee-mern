@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
                 stripeSessionId: `mock_${mockOrderId}_${Date.now()}`
             });
 
-            // Send Simulated Email (Force Simulate to avoid timeouts)
+            // Send Confirmation Email
             const emailHtml = generateOrderEmail(newOrder);
             sendEmail({
                 to: customer.email,
@@ -55,9 +55,9 @@ router.post('/', async (req, res) => {
                 html: emailHtml
             });
 
-            // Send Merchant Notification (Force Simulate)
+            // Send Merchant Notification
             sendEmail({
-                to: process.env.CONTACT_EMAIL || 'admin@example.com',
+                to: process.env.CONTACT_EMAIL || process.env.GMAIL_USER || 'kamalkarthik88615@gmail.com',
                 subject: `🔔 New Order: ${mockOrderId}`,
                 html: `<p>New order received from ${customer.name} ($${totalAmount}).</p>`
             });
