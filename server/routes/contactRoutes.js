@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
         `;
 
         await sendEmail({
-            to: process.env.CONTACT_EMAIL || 'admin@example.com',
+            to: process.env.CONTACT_EMAIL || process.env.GMAIL_USER || 'kamalkarthik88615@gmail.com',
             subject: `New Message from ${name}`,
             html: emailHtml,
         });

@@ -15,19 +15,21 @@ const sendEmail = async (options) => {
     let transporter;
 
     if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
+        console.log(`📡 SMTP initialized for user: ${process.env.GMAIL_USER}`);
         transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 465,
-            secure: true, // Use SSL
+            secure: true,
             auth: {
                 user: process.env.GMAIL_USER,
                 pass: process.env.GMAIL_APP_PASSWORD,
             },
             tls: {
-                rejectUnauthorized: false // Helps avoid some connection issues in cloud environments
+                rejectUnauthorized: false
             }
         });
     } else {
+        console.warn('⚠️ SMTP Missing Credentials - GMAIL_USER or GMAIL_APP_PASSWORD not found in env');
         console.log('📧 [DEV] Email simulated (Missing Credentials):', options.subject);
         return;
     }
