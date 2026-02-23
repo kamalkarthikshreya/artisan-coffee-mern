@@ -17,7 +17,9 @@ const ProductShowcase = () => {
                 } else if (data && Array.isArray(data.products)) {
                     setProducts(data.products);
                 } else {
-                    setError("Invalid data format received");
+                    const receivedType = typeof data;
+                    const preview = data && typeof data === 'string' ? data.substring(0, 50) : JSON.stringify(data).substring(0, 50);
+                    setError(`Invalid data format (Received: ${receivedType}). ${preview}...`);
                     setProducts([]);
                 }
             } catch (err) {
