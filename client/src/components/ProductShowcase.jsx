@@ -6,22 +6,23 @@ import { fetchProducts } from '../services/api';
 const ProductShowcase = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const loadProducts = async () => {
             try {
                 const data = await fetchProducts();
-                // Safety check: specific handling if data is wrapped or invalid
                 if (Array.isArray(data)) {
                     setProducts(data);
                 } else if (data && Array.isArray(data.products)) {
                     setProducts(data.products);
                 } else {
-                    console.error("API returned invalid product data format:", data);
+                    setError("Invalid data format received");
                     setProducts([]);
                 }
-            } catch (error) {
-                console.error("Failed to load products", error);
+            } catch (err) {
+                console.error("Failed to load products", err);
+                setError(err.message || "Connection to gallery failed");
                 setProducts([]);
             } finally {
                 setLoading(false);
@@ -50,6 +51,16 @@ const ProductShowcase = () => {
             <div className="py-32 text-center text-[#F5E6D3] flex flex-col items-center justify-center">
                 <div className="w-12 h-12 border-4 border-[#D4A574] border-t-transparent rounded-full animate-spin mb-4" />
                 <p className="text-xl font-serif">Curating Selection...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="py-20 text-center text-[#D4A574] border border-[#D4A574]/20 rounded-xl max-w-lg mx-auto bg-[#1A0F0A]">
+                <p className="text-lg font-serif mb-2">Notice from the Roastery</p>
+                <p className="text-sm opacity-60 px-4">{error}</p>
+                <p className="text-xs mt-4 opacity-40">Please check your network or refresh the page.</p>
             </div>
         );
     }
