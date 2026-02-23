@@ -13,16 +13,22 @@ const sendEmail = async (options) => {
 
     // 2) Create a transporter
     let transporter;
+    let user = (process.env.GMAIL_USER || '').trim();
+    let pass = (process.env.GMAIL_APP_PASSWORD || '').trim();
 
-    if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
-        console.log(`📡 SMTP initialized for user: ${process.env.GMAIL_USER}`);
+    // Strip leading '=' if it exists (common copy-paste error identified in logs)
+    if (user.startsWith('=')) user = user.substring(1);
+    if (pass.startsWith('=')) pass = pass.substring(1);
+
+    if (user && pass) {
+        console.log(`📡 SMTP initialized for user: ${user}`);
         transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
+            port: 587,
+            secure: false, // Use STARTTLS for Port 587
             auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_APP_PASSWORD,
+                user: user,
+                pass: pass,
             },
             tls: {
                 rejectUnauthorized: false
@@ -36,11 +42,11 @@ const sendEmail = async (options) => {
 
     // 3) Define the email options
     const mailOptions = {
-        from: `"Artisan Coffee" <${process.env.GMAIL_USER}>`,
+        from: `"Artisan Coffee" <${user}>`,
         to: options.to,
         subject: options.subject,
         html: options.html,
-        replyTo: process.env.CONTACT_EMAIL || process.env.GMAIL_USER,
+        replyTo: process.env.CONTACT_EMAIL || user,
     };
 
     // 4) Actually send the email (Fire & Forget handle)
