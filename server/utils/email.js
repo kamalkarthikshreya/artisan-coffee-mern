@@ -45,8 +45,12 @@ const sendEmail = async (options) => {
 
     // 4) Actually send the email (Fire & Forget handle)
     try {
+        // Verify connection before sending
+        await transporter.verify();
+        console.log(`📡 SMTP Connection Verified. Sending email to ${options.to}...`);
+
         await transporter.sendMail(mailOptions);
-        console.log(`📧 Email sent to ${options.to}`);
+        console.log(`✅ Email sent to ${options.to}`);
     } catch (err) {
         console.error('❌ Email send failed (NON-BLOCKING):', err.message);
     }
