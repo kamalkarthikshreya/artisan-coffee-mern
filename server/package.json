@@ -1,6 +1,6 @@
 {
     "name": "artisan-coffee-server",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Backend for Artisan Coffee MERN App",
     "main": "server.js",
     "scripts": {
@@ -8,6 +8,7 @@
         "dev": "nodemon server.js"
     },
     "dependencies": {
+        "@sendgrid/mail": "^8.1.6",
         "bcryptjs": "^3.0.3",
         "cors": "^2.8.5",
         "dotenv": "^16.4.5",

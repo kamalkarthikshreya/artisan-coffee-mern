@@ -1,7 +1,7 @@
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
 const sendEmail = async (options) => {
-    // 1) Explicit Simulation Check (Only if specifically requested)
+    // 1) Explicit Simulation Check
     if (process.env.SIMULATE_EMAIL === 'true') {
         console.log('--- 📧 SIMULATED EMAIL ---');
         console.log(`To: ${options.to}`);
@@ -11,63 +11,33 @@ const sendEmail = async (options) => {
         return;
     }
 
-    // 2) Create a transporter
-    let transporter;
-    let user = (process.env.GMAIL_USER || '').trim();
-    let pass = (process.env.GMAIL_APP_PASSWORD || '').trim();
+    const apiKey = (process.env.SENDGRID_API_KEY || '').trim();
 
-    // Strip leading '=' if it exists (common copy-paste error identified in logs)
-    if (user.startsWith('=')) user = user.substring(1);
-    if (pass.startsWith('=')) pass = pass.substring(1);
+    if (apiKey) {
+        try {
+            sgMail.setApiKey(apiKey);
 
-    if (user && pass) {
-        console.log(`📡 SMTP Configured for: ${user}`);
-        transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true, // Use SSL for Port 465
-            auth: {
-                user: user,
-                pass: pass,
-            },
-            tls: {
-                rejectUnauthorized: false,
-                minVersion: 'TLSv1.2'
-            },
-            connectionTimeout: 30000, // 30 seconds
-            greetingTimeout: 30000,
-            socketTimeout: 30000,
-            debug: true,
-            logger: true
-        });
+            const msg = {
+                to: options.to,
+                from: 'kamalkarthik88615@gmail.com', // Verified Sender
+                subject: options.subject,
+                html: options.html,
+                replyTo: process.env.CONTACT_EMAIL || 'kamalkarthik88615@gmail.com',
+            };
+
+            console.log(`📡 Attempting SendGrid delivery to ${options.to}...`);
+            await sgMail.send(msg);
+            console.log(`✅ Email delivered via SendGrid API`);
+        } catch (err) {
+            console.error('❌ SendGrid Delivery Error:', {
+                message: err.message,
+                code: err.code,
+                response: err.response ? err.response.body : 'No response from SendGrid'
+            });
+        }
     } else {
-        console.warn('⚠️ SMTP Missing Credentials - GMAIL_USER or GMAIL_APP_PASSWORD not found in env');
+        console.warn('⚠️ SendGrid Missing API Key - SENDGRID_API_KEY not found in env');
         console.log('📧 [DEV] Email simulated (Missing Credentials):', options.subject);
-        return;
-    }
-
-    // 3) Define the email options
-    const mailOptions = {
-        from: `"Artisan Coffee" <${user}>`,
-        to: options.to,
-        subject: options.subject,
-        html: options.html,
-        replyTo: process.env.CONTACT_EMAIL || user,
-    };
-
-    // 4) Actually send the email (Fire & Forget handle)
-    try {
-        console.log(`📡 Attempting delivery to ${options.to}...`);
-        const info = await transporter.sendMail(mailOptions);
-        console.log(`✅ Email delivered: ${info.messageId}`);
-    } catch (err) {
-        console.error('❌ SMTP Delivery Error Context:', {
-            message: err.message,
-            code: err.code,
-            command: err.command,
-            response: err.response,
-            stack: err.stack
-        });
     }
 };
 
