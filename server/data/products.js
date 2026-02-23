@@ -59,7 +59,7 @@ const products = [
         description: 'Espresso "stained" with a dash of foamed milk — for those who want the boldness of espresso with a touch of creaminess.',
         price: '$3.75',
         rating: 4.6,
-        image: 'https://images.unsplash.com/photo-1485808191679-5f86510bd9d3?w=600&q=80',
+        image: 'https://images.unsplash.com/photo-1534687941688-651ccaafbff8?w=600&q=80',
         features: ['Espresso', 'Touch of Foam', 'Bold']
     },
     {
