@@ -15,7 +15,10 @@ dotenv.config();
 connectDB();
 
 const app = express();
-const PORT = process.env.PORT || 5001; // Hardcode fallback to 5001 to avoid EADDRINUSE on 5000
+const PORT = process.env.PORT || 5001;
+
+// PRE-FLIGHT DEBUG ROUTE
+app.get('/api/debug-v3', (req, res) => res.json({ status: 'active', version: '1.0.3', date: 'Feb 23' }));
 
 // Middleware
 app.use(cors());
