@@ -5,7 +5,7 @@ const products = [
         description: 'Cappuccino is a latte made with more foam than steamed milk, often topped with cocoa powder.',
         price: '$3.50',
         rating: 4.9,
-        image: '/coffee/cappuccino.svg',
+        image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&q=80',
         features: ['Espresso', 'Steamed Milk', 'Foam']
     },
     {
@@ -14,7 +14,7 @@ const products = [
         description: 'Latte is a coffee drink made with espresso and steamed milk. Rich, creamy, balanced.',
         price: '$4.00',
         rating: 5.0,
-        image: '/coffee/latte.svg',
+        image: 'https://images.unsplash.com/photo-1561882468-9110d70d6f58?w=600&q=80',
         features: ['Espresso', 'Steamed Milk', 'Light Foam']
     },
     {
@@ -23,7 +23,7 @@ const products = [
         description: 'Mocha is a coffee beverage where dark espresso meets rich chocolate and creamy milk.',
         price: '$4.50',
         rating: 4.7,
-        image: '/coffee/mocha.svg',
+        image: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600&q=80',
         features: ['Espresso', 'Chocolate', 'Steamed Milk']
     },
     {
