@@ -52,16 +52,14 @@ router.post('/', async (req, res) => {
             sendEmail({
                 to: customer.email,
                 subject: `Order Confirmation: ${mockOrderId}`,
-                html: emailHtml,
-                forceSimulate: true
+                html: emailHtml
             });
 
             // Send Merchant Notification (Force Simulate)
             sendEmail({
                 to: process.env.CONTACT_EMAIL || 'admin@example.com',
                 subject: `🔔 New Order: ${mockOrderId}`,
-                html: `<p>New order received from ${customer.name} ($${totalAmount}).</p>`,
-                forceSimulate: true
+                html: `<p>New order received from ${customer.name} ($${totalAmount}).</p>`
             });
 
             return res.json({

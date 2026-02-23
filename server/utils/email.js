@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 
 const sendEmail = async (options) => {
-    // 1) Check for Forced Simulation (Skip real sending)
-    if (options.forceSimulate || process.env.SIMULATE_EMAIL === 'true') {
+    // 1) Explicit Simulation Check (Only if specifically requested)
+    if (process.env.SIMULATE_EMAIL === 'true') {
         console.log('--- 📧 SIMULATED EMAIL ---');
         console.log(`To: ${options.to}`);
         console.log(`Subject: ${options.subject}`);
@@ -16,14 +16,19 @@ const sendEmail = async (options) => {
 
     if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
         transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true, // Use SSL
             auth: {
                 user: process.env.GMAIL_USER,
                 pass: process.env.GMAIL_APP_PASSWORD,
             },
+            tls: {
+                rejectUnauthorized: false // Helps avoid some connection issues in cloud environments
+            }
         });
     } else {
-        console.log('📧 [DEV] Email simulated (No Credentials):', options.subject);
+        console.log('📧 [DEV] Email simulated (Missing Credentials):', options.subject);
         return;
     }
 
