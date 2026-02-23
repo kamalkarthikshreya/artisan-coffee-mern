@@ -25,6 +25,9 @@ router.post('/', async (req, res) => {
             return sum + (price * item.quantity);
         }, 0);
 
+        // Resolve Frontend URL dynamically
+        const origin = req.headers.origin || process.env.FRONTEND_URL || 'http://localhost:5173';
+
         // Simulation Mode Check
         if (!stripe || !process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.startsWith('sk_test_...')) {
             console.warn('⚠️ Stripe Keys Inspect - Using SIMULATION MODE');
@@ -60,7 +63,7 @@ router.post('/', async (req, res) => {
             });
 
             return res.json({
-                url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/success?session_id=mock_${mockOrderId}`
+                url: `${origin}/success?session_id=mock_${mockOrderId}`
             });
         }
 
@@ -80,8 +83,8 @@ router.post('/', async (req, res) => {
                 quantity: item.quantity,
             })),
             mode: 'payment',
-            success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/checkout`,
+            success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${origin}/checkout`,
             customer_email: customer.email,
         });
 
