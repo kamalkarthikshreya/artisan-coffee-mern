@@ -27,7 +27,8 @@ const Home = () => {
 
             <footer className="py-12 text-center bg-[#050201] text-[#D4A574]/40 border-t border-white/5 relative overflow-hidden">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-1 bg-[#D4A574]/50 blur-[50px] rounded-full" />
-                <p className="relative z-10 text-sm font-serif">&copy; {new Date().getFullYear()} Artisan Coffee. Crafted with passion.</p>
+                <p className="relative z-10 text-sm font-serif">© {new Date().getFullYear()} Artisan Coffee. Crafted with passion.</p>
+                <p className="relative z-10 text-xs mt-2 text-[#D4A574]/30 tracking-widest uppercase">Designed & Built by Kamal Karthik</p>
             </footer>
         </main>
     );
