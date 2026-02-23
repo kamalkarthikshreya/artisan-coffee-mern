@@ -47,19 +47,21 @@ router.post('/', async (req, res) => {
                 stripeSessionId: `mock_${mockOrderId}_${Date.now()}`
             });
 
-            // Send Simulated Email (Fire & Forget)
+            // Send Simulated Email (Force Simulate to avoid timeouts)
             const emailHtml = generateOrderEmail(newOrder);
             sendEmail({
                 to: customer.email,
                 subject: `Order Confirmation: ${mockOrderId}`,
-                html: emailHtml
+                html: emailHtml,
+                forceSimulate: true
             });
 
-            // Send Merchant Notification (Fire & Forget)
+            // Send Merchant Notification (Force Simulate)
             sendEmail({
                 to: process.env.CONTACT_EMAIL || 'admin@example.com',
                 subject: `🔔 New Order: ${mockOrderId}`,
-                html: `<p>New order received from ${customer.name} ($${totalAmount}).</p>`
+                html: `<p>New order received from ${customer.name} ($${totalAmount}).</p>`,
+                forceSimulate: true
             });
 
             return res.json({

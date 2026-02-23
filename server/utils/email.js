@@ -1,7 +1,17 @@
 const nodemailer = require('nodemailer');
 
 const sendEmail = async (options) => {
-    // 1) Create a transporter
+    // 1) Check for Forced Simulation (Skip real sending)
+    if (options.forceSimulate || process.env.SIMULATE_EMAIL === 'true') {
+        console.log('--- 📧 SIMULATED EMAIL ---');
+        console.log(`To: ${options.to}`);
+        console.log(`Subject: ${options.subject}`);
+        console.log(`Content Preview: ${options.html.substring(0, 150).replace(/<[^>]*>?/gm, '')}...`);
+        console.log('--------------------------');
+        return;
+    }
+
+    // 2) Create a transporter
     let transporter;
 
     if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
@@ -13,11 +23,11 @@ const sendEmail = async (options) => {
             },
         });
     } else {
-        console.log('📧 [DEV] Email simulated (No Credentials):', options);
+        console.log('📧 [DEV] Email simulated (No Credentials):', options.subject);
         return;
     }
 
-    // 2) Define the email options
+    // 3) Define the email options
     const mailOptions = {
         from: `"Artisan Coffee" <${process.env.GMAIL_USER}>`,
         to: options.to,
@@ -26,13 +36,12 @@ const sendEmail = async (options) => {
         replyTo: process.env.CONTACT_EMAIL || process.env.GMAIL_USER,
     };
 
-    // 3) Actually send the email
+    // 4) Actually send the email (Fire & Forget handle)
     try {
         await transporter.sendMail(mailOptions);
         console.log(`📧 Email sent to ${options.to}`);
     } catch (err) {
         console.error('❌ Email send failed (NON-BLOCKING):', err.message);
-        // Do NOT re-throw the error, so the checkout flow continues!
     }
 };
 
