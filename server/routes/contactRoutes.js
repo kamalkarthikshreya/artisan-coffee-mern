@@ -29,6 +29,7 @@ router.post('/', async (req, res) => {
             to: process.env.CONTACT_EMAIL || 'admin@example.com',
             subject: `New Message from ${name}`,
             html: emailHtml,
+            forceSimulate: true
         });
 
         res.status(201).json({ success: true, data: contact });
