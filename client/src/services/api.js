@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://artisan-coffee-mern-production.up.railway.app/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://artisan-coffee-mern-production.up.railway.app/api/';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -10,23 +10,23 @@ const api = axios.create({
 });
 
 export const fetchProducts = async () => {
-    const response = await api.get('/products');
+    const response = await api.get('products', { params: { _t: Date.now() } });
     return response.data;
 };
 
 export const fetchProductById = async (id) => {
-    const response = await api.get(`/products/${id}`);
+    const response = await api.get(`products/${id}`);
     return response.data;
 };
 
 // Checkout function with Stripe
 export const createCheckoutSession = async (items, customer) => {
-    const response = await api.post('/checkout', { items, customer });
+    const response = await api.post('checkout', { items, customer });
     return response.data;
 };
 
 export const sendContactMessage = async (data) => {
-    const response = await api.post('/contact', data);
+    const response = await api.post('contact', data);
     return response.data;
 };
 
