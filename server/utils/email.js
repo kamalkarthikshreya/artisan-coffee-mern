@@ -21,18 +21,24 @@ const sendEmail = async (options) => {
     if (pass.startsWith('=')) pass = pass.substring(1);
 
     if (user && pass) {
-        console.log(`📡 SMTP initialized for user: ${user}`);
+        console.log(`📡 SMTP Configured for: ${user}`);
         transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true, // Use SSL for Port 465
             auth: {
                 user: user,
                 pass: pass,
             },
-            debug: true, // Added for deep diagnostics
-            logger: true, // Logs SMTP traffic to console
             tls: {
-                rejectUnauthorized: false
-            }
+                rejectUnauthorized: false,
+                minVersion: 'TLSv1.2'
+            },
+            connectionTimeout: 30000, // 30 seconds
+            greetingTimeout: 30000,
+            socketTimeout: 30000,
+            debug: true,
+            logger: true
         });
     } else {
         console.warn('⚠️ SMTP Missing Credentials - GMAIL_USER or GMAIL_APP_PASSWORD not found in env');
@@ -51,14 +57,17 @@ const sendEmail = async (options) => {
 
     // 4) Actually send the email (Fire & Forget handle)
     try {
-        // Verify connection before sending
-        await transporter.verify();
-        console.log(`📡 SMTP Connection Verified. Sending email to ${options.to}...`);
-
-        await transporter.sendMail(mailOptions);
-        console.log(`✅ Email sent to ${options.to}`);
+        console.log(`📡 Attempting delivery to ${options.to}...`);
+        const info = await transporter.sendMail(mailOptions);
+        console.log(`✅ Email delivered: ${info.messageId}`);
     } catch (err) {
-        console.error('❌ Email send failed (NON-BLOCKING):', err.message);
+        console.error('❌ SMTP Delivery Error Context:', {
+            message: err.message,
+            code: err.code,
+            command: err.command,
+            response: err.response,
+            stack: err.stack
+        });
     }
 };
 
