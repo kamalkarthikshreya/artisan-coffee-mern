@@ -8,6 +8,7 @@ const productRoutes = require('./routes/productRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const userRoutes = require('./routes/userRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // PRE-FLIGHT DEBUG ROUTE
-app.get('/api/debug-v3', (req, res) => res.json({ status: 'active', version: '1.0.3', date: 'Feb 23' }));
+app.get('/api/debug-v5', (req, res) => res.json({ status: 'active', version: '1.0.5', date: 'Feb 23' }));
 
 // Middleware
 app.use(cors());
@@ -29,17 +30,18 @@ app.use('/api/products', productRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/checkout', orderRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {
-    res.send('Artisan Coffee Backend is Running v1.0.3');
+    res.send('Artisan Coffee Backend is Running v1.0.5');
 });
 
 app.get('/health', (req, res) => {
-    res.json({ status: 'ok', version: '1.0.3', time: new Date() });
+    res.json({ status: 'ok', version: '1.0.5', time: new Date() });
 });
 
 // Start Server
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT} [v1.0.3]`);
+    console.log(`🚀 Server running on port ${PORT} [v1.0.5]`);
 });

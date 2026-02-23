@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ProductCard from './ProductCard';
+import ProductSkeleton from './ProductSkeleton';
 import { fetchProducts } from '../services/api';
 
 const ProductShowcase = () => {
@@ -50,10 +51,13 @@ const ProductShowcase = () => {
 
     if (loading) {
         return (
-            <div className="py-32 text-center text-[#F5E6D3] flex flex-col items-center justify-center">
-                <div className="w-12 h-12 border-4 border-[#D4A574] border-t-transparent rounded-full animate-spin mb-4" />
-                <p className="text-xl font-serif">Curating Selection...</p>
-            </div>
+            <section id="products" className="py-32 px-4 md:px-8 relative max-w-7xl mx-auto">
+                <h2 className="text-6xl md:text-7xl font-serif font-bold text-center text-[#F5E6D3] mb-4">Our Signature Blends</h2>
+                <div className="h-1 w-24 bg-[#D4A574] mx-auto mb-16 rounded-full" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+                    {[1, 2, 3, 4, 5, 6].map(i => <ProductSkeleton key={i} />)}
+                </div>
+            </section>
         );
     }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Menu, X, User, LogOut, Coffee } from 'lucide-react';
+import { ShoppingBag, Menu, X, User, LogOut, Coffee, Package, LayoutDashboard } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
     const { cartItems, toggleSidebar } = useCart();
     const { user, logout } = useAuth();
     const location = useLocation();
@@ -29,8 +30,8 @@ const Navbar = () => {
     return (
         <nav
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${scrolled
-                    ? 'bg-[#0A0503]/80 backdrop-blur-2xl py-4 border-b border-white/5 shadow-2xl'
-                    : 'bg-transparent py-8'
+                ? 'bg-[#0A0503]/80 backdrop-blur-2xl py-4 border-b border-white/5 shadow-2xl'
+                : 'bg-transparent py-8'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
@@ -62,15 +63,34 @@ const Navbar = () => {
                 <div className="flex items-center gap-6">
                     {/* User Menu */}
                     {user ? (
-                        <div className="hidden md:flex items-center gap-4 pl-4 border-l border-white/10">
-                            <span className="text-[#F5E6D3] text-xs uppercase tracking-wider font-bold">{user.name.split(' ')[0]}</span>
+                        <div className="hidden md:flex items-center gap-2 pl-4 border-l border-white/10 relative">
                             <button
-                                onClick={logout}
-                                className="text-[#D4A574] hover:text-red-400 transition-colors transform hover:rotate-12"
-                                title="Logout"
+                                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                                className="flex items-center gap-2 text-[#F5E6D3] hover:text-[#D4A574] transition-colors"
                             >
-                                <LogOut size={18} />
+                                <div className="w-7 h-7 rounded-full bg-[#D4A574] text-[#0A0503] font-bold text-xs flex items-center justify-center">
+                                    {user.name?.[0]?.toUpperCase()}
+                                </div>
+                                <span className="text-xs uppercase tracking-wider font-bold">{user.name.split(' ')[0]}</span>
                             </button>
+                            {userMenuOpen && (
+                                <div className="absolute top-10 right-0 bg-[#1A0F0A] border border-white/10 rounded-xl shadow-2xl py-2 w-44 z-50">
+                                    <Link to="/profile" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-[#F5E6D3]/80 hover:text-[#D4A574] hover:bg-white/5 transition-colors">
+                                        <User size={14} /> My Profile
+                                    </Link>
+                                    <Link to="/orders" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-[#F5E6D3]/80 hover:text-[#D4A574] hover:bg-white/5 transition-colors">
+                                        <Package size={14} /> My Orders
+                                    </Link>
+                                    <Link to="/admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-[#F5E6D3]/80 hover:text-[#D4A574] hover:bg-white/5 transition-colors">
+                                        <LayoutDashboard size={14} /> Admin
+                                    </Link>
+                                    <div className="border-t border-white/5 mt-1 pt-1">
+                                        <button onClick={() => { logout(); setUserMenuOpen(false); }} className="flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 w-full transition-colors">
+                                            <LogOut size={14} /> Sign Out
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <Link
@@ -122,9 +142,12 @@ const Navbar = () => {
                             </div>
                             <div className="h-px bg-white/10 w-full" />
                             {user ? (
-                                <button onClick={logout} className="text-[#D4A574] flex items-center gap-3 text-lg font-serif">
-                                    <LogOut size={20} /> Logout
-                                </button>
+                                <>
+                                    <Link to="/profile" className="text-[#F5E6D3] flex items-center gap-3 text-lg font-serif"><User size={20} /> My Profile</Link>
+                                    <Link to="/orders" className="text-[#F5E6D3] flex items-center gap-3 text-lg font-serif"><Package size={20} /> My Orders</Link>
+                                    <Link to="/admin" className="text-[#F5E6D3] flex items-center gap-3 text-lg font-serif"><LayoutDashboard size={20} /> Admin</Link>
+                                    <button onClick={logout} className="text-red-400 flex items-center gap-3 text-lg font-serif"><LogOut size={20} /> Sign Out</button>
+                                </>
                             ) : (
                                 <Link to="/login" className="text-[#D4A574] flex items-center gap-3 text-lg font-serif">
                                     <User size={20} /> Sign In

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 
 const CartContext = createContext();
 
@@ -28,18 +29,22 @@ export const CartProvider = ({ children }) => {
         setCartItems(prev => {
             const existing = prev.find(item => item.id === product.id);
             if (existing) {
+                toast(`+1 ${product.name}`, { icon: '☕' });
                 return prev.map(item =>
                     item.id === product.id
                         ? { ...item, quantity: item.quantity + quantity }
                         : item
                 );
             }
+            toast.success(`${product.name} added to cart!`);
             return [...prev, { ...product, quantity }];
         });
         setIsSidebarOpen(true);
     };
 
     const removeFromCart = (id) => {
+        const item = cartItems.find(i => i.id === id);
+        if (item) toast(`${item.name} removed`, { icon: '🗑️' });
         setCartItems(prev => prev.filter(item => item.id !== id));
     };
 

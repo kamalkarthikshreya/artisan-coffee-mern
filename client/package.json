@@ -12,14 +12,15 @@
     "dependencies": {
         "@stripe/react-stripe-js": "^2.9.0",
         "@stripe/stripe-js": "^3.5.0",
+        "@vitejs/plugin-react": "^4.2.1",
         "axios": "^1.13.5",
         "framer-motion": "^11.18.2",
         "lucide-react": "^0.344.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-hot-toast": "^2.6.0",
         "react-router-dom": "^6.30.3",
-        "vite": "^5.1.6",
-        "@vitejs/plugin-react": "^4.2.1"
+        "vite": "^5.1.6"
     },
     "devDependencies": {
         "@types/react": "^18.2.64",

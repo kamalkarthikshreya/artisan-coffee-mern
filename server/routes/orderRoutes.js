@@ -148,4 +148,18 @@ router.post('/verify', async (req, res) => {
     }
 });
 
+// @desc    Get orders by customer email
+// @route   GET /api/checkout/myorders?email=...
+router.get('/myorders', async (req, res) => {
+    try {
+        const { email } = req.query;
+        if (!email) return res.status(400).json({ message: 'Email is required' });
+        const orders = await Order.find({ 'customer.email': email }).sort({ createdAt: -1 });
+        res.json(orders);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = router;
+
