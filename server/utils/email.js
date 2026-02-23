@@ -23,13 +23,13 @@ const sendEmail = async (options) => {
     if (user && pass) {
         console.log(`📡 SMTP initialized for user: ${user}`);
         transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure: false, // Use STARTTLS for Port 587
+            service: 'gmail',
             auth: {
                 user: user,
                 pass: pass,
             },
+            debug: true, // Added for deep diagnostics
+            logger: true, // Logs SMTP traffic to console
             tls: {
                 rejectUnauthorized: false
             }
