@@ -14,7 +14,7 @@ const products = [
         description: 'Latte is a coffee drink made with espresso and steamed milk. Rich, creamy, balanced.',
         price: '$4.00',
         rating: 5.0,
-        image: 'https://images.unsplash.com/photo-1517256673644-36ad501f0045?w=600&q=80',
+        image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80',
         features: ['Espresso', 'Steamed Milk', 'Light Foam']
     },
     {
